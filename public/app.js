@@ -5,13 +5,6 @@ const POLL_INTERVAL_MS = 3 * 1000;
 // update table every second (for duration) 
 const TABLE_TICK_MS = 1* 1000;
 
-//histogram info
-const HISTOGRAM_WINDOW_S = 5 * 60;
-const RSSI_MIN = -110;
-const RSSI_MAX = -65;
-const BIN_SIZE = 5;
-
-
 // pull all elements that will need to be updated from html file
 const el = {
   status: document.getElementById('status'),
@@ -113,7 +106,6 @@ function createChart() {
 function updateHistogram() {
   chart.data.labels = latest.histogram.labels;
   chart.data.datasets[0].data = latest.histogram.counts;
-  console.log(latest)
   chart.update();
 }
 
@@ -123,6 +115,7 @@ async function poll() {
     const resp = await fetch('/api/current');
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     latest = await resp.json(); 
+    console.log("LATEST:", latest)
     // when get data succesfully, status 'connected' = true
     setStatus(true);
     // render counters

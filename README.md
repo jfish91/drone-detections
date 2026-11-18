@@ -9,7 +9,7 @@ Simulates incoming drone detection messages and displays them in a real-time web
 ```
 simulator ──POST /api/detections──▶ server ──serves──▶ browser UI
                                       ▲                    │
-                                      └── GET /api/current ┘  (polled every second)
+                                      └── GET /api/current ┘  (polled every 3 seconds)
 ```
 
 ## Requirements
@@ -97,3 +97,5 @@ Drone IDs and message IDs are 8 random letters, checked for uniqueness.
 ```bash
 npm test
 ```
+
+- **histogram.tst.js:** ensure histogram logic is sound (bin counts and sizes, border values, invalid values, etc)

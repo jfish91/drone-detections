@@ -16,6 +16,7 @@ app.get("/", (req, res) => {
 
 app.get("/api/current", (req, res) => {
     const currentState = detections.currentState();
+    // console.log(currentState)
     res.json(currentState);
 })
 

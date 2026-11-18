@@ -1,5 +1,8 @@
 const RSSI_WINDOW_SECONDS = 5 * 60;
-const RSSI_BINS = { min: -110, max: -65, binSize: 5 };
+const RSSI_MIN = -110;
+const RSSI_MAX = -65;
+const BIN_SIZE = 5;
+const RSSI_BINS = { min: RSSI_MIN, max: RSSI_MAX, binSize: BIN_SIZE };
 
 export function createDetectionState() {
 
@@ -36,10 +39,8 @@ export function createDetectionState() {
                     classification: detection.classification,
                     rssi: detection.rssi,
                 }; 
-                // console.log(droneID)
-                // console.log(newDrone)
+
                 allDrones.set(droneID, newDrone);
-                // console.log(allDrones);
 
                 // update counts
                 bandCounts[detection.band] += 1;
