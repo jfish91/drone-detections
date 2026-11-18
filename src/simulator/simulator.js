@@ -34,6 +34,8 @@ async function simMessage() {
     }
 }
 
+console.log(`simulator running... sending to ${url}`)
+
 // trigger initial message POST then send every 3 seconds
 simMessage();
 setInterval(simMessage, 3000);
