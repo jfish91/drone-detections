@@ -6,7 +6,9 @@
   "scripts": {
     "test": "node --test",
     "simulate": "node src/simulator/simulator.js",
-    "server": "node src/server/server.js"
+    "server": "node src/server/server.js",
+    "start": "npm run dev",
+    "dev": "concurrently -k -n server,sim -c blue,green \"npm:server\" \"wait-on -t 15000 tcp:3000 && npm run simulate\""
   },
   "keywords": [],
   "author": "",
@@ -16,5 +18,9 @@
     "chart.js": "^4.6.1",
     "dotenv": "^18.0.10",
     "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.7",
+    "wait-on": "^9.5.1"
   }
 }

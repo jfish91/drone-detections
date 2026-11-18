@@ -3,7 +3,7 @@ import {createSimulator} from './message-generator.js'
 
 const sim = createSimulator();
 
-const url = process.env.POST_URL || 'https://httpbin.org/post' // TODO: replace with express frontend app URL 
+const url = process.env.POST_URL || 'http://localhost:3000/api/detections' //
 
 async function simMessage() {
     let timestamp = Math.floor(Date.now()/1000); // in seconds
