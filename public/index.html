@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drone Detection Monitor</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Drone Detection Monitor</h1>
+    <span id="status">Connecting…</span>
+  </header>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Messages received</h2>
+      <div class="big-number" id="message-count">0</div>
+    </div>
+    <div class="card">
+      <h2>Active detections</h2>
+      <div class="big-number" id="active-count">0</div>
+    </div>
+    <div class="card">
+      <h2>Top bands</h2>
+      <ul class="count-list" id="band-counts"></ul>
+    </div>
+    <div class="card">
+      <h2>Top classifications</h2>
+      <ul class="count-list" id="class-counts"></ul>
+    </div>
+  </section>
+
+  <section class="card spaced">
+    <h2>Active detections</h2>
+    <div class="table-wrap">
+      <table id="detections-table">
+        <thead>
+          <tr>
+            <th scope="col">Drone ID</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">Band</th>
+            <th scope="col">Classification</th>
+            <th scope="col">RSSI</th>
+            <th scope="col">Duration (s)</th>
+          </tr>
+        </thead>
+        <tbody id="detections-body">
+          <tr><td class="empty" colspan="6">No active detections</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>RSSI distribution (last 5 minutes)</h2>
+    <div class="chart-wrap">
+      <canvas id="rssi-histogram"></canvas>
+    </div>
+  </section>
+
+  <script src="/vendor/chart.js/chart.umd.js"></script>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

@@ -7,6 +7,12 @@ const PORT = process.env.PORT || 3000
 const detections = createDetectionState()
 
 app.use(express.json());
+app.use(express.static('public'));
+app.use('/vendor/chart.js', express.static('node_modules/chart.js/dist'));
+
+app.get("/", (req, res) => {
+    res.sendFile('index.html');
+})
 
 app.get("/api/current", (req, res) => {
     const currentState = detections.currentState();

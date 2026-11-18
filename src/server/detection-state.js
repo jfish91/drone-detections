@@ -1,5 +1,5 @@
-
-const RSSI_HISTORY_TIMEFRAME = 5;
+const RSSI_WINDOW_SECONDS = 5 * 60;
+const RSSI_BINS = { min: -110, max: -65, binSize: 5 };
 
 export function createDetectionState() {
 
@@ -49,6 +49,9 @@ export function createDetectionState() {
                 allDrones.get(droneID).rssi = detection.rssi;
             }
 
+            // add rssi to list for histogram
+            rssis.push(detection.rssi)
+
         });
 
         if (!timestamp) {
@@ -60,17 +63,20 @@ export function createDetectionState() {
         // console.log(allDrones);
     }
 
-    function currentState() {
+    function currentState(now = Math.floor(Date.now() / 1000)) {
 
         const activeCount = activeDroneIDs.size;
         const activeDrones = [...activeDroneIDs].map(id => allDrones.get(id));
 
-        // want last X mins of rssi history, data every 3 seconds = 20 items per minute
-        // TODO: come back and fix this later
-        const recentRSSI = rssiHistory.slice(-(20* RSSI_HISTORY_TIMEFRAME));  
-
+        // filter rssi vals to only pass through those in wanted timeframe 
+        const cutoff = now - RSSI_WINDOW_SECONDS
+        const rssiValues = rssiHistory.filter(group => Number(group.timestamp) >= cutoff).flatMap(group => group.rssis);
+        // bin rssi values into histogram
+        const histogram = binRssi(rssiValues, RSSI_BINS);
+        
         const allDroneList = [...allDrones]
-        return {activeDrones, activeCount, messageCount, bandCounts, classCounts, recentRSSI, allDroneList};
+
+        return {activeDrones, activeCount, messageCount, bandCounts, classCounts, histogram, allDroneList};
     }
 
     function cleaner() {
@@ -80,4 +86,33 @@ export function createDetectionState() {
     }
 
     return {handleMessage, currentState}
+}
+
+
+export function binRssi(values, { min, max, binSize }) {
+  if (!(binSize > 0) || !(max > min)) {
+    throw new RangeError('binRssi: need binSize > 0 and max > min');
+  }
+
+  const binCount = Math.ceil((max - min) / binSize);
+  const counts = new Array(binCount).fill(0);
+
+  // create labels
+  const labels = [];
+  for (let i = 0; i < binCount; i++) {
+    const lo = min + i * binSize;
+    const hi = Math.min(lo + binSize, max);
+    labels.push(`${lo} to ${hi}`);
+  }
+
+  for (const v of values) {
+    // skip anything that isn't a real number or falls outside the range
+    if (!Number.isFinite(v) || v < min || v > max) continue;
+
+    // value of exactly `max` lands in the last bin
+    const i = Math.min(Math.floor((v - min) / binSize), binCount - 1);
+    counts[i]++;
+  }
+
+  return { labels, counts };
 }
