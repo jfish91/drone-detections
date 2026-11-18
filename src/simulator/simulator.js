@@ -1,9 +1,9 @@
+import 'dotenv/config'
 import {createSimulator} from './message-generator.js' 
 
 const sim = createSimulator();
 
-// temp url for testing, need to switch to frontend express app
-const url = 'https://httpbin.org/post'
+const url = process.env.POST_URL || 'https://httpbin.org/post' // TODO: replace with express frontend app URL 
 
 async function simMessage() {
     let timestamp = Math.floor(Date.now()/1000); // in seconds
