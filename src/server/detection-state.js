@@ -10,6 +10,9 @@ export function createDetectionState() {
     const allDrones = new Map();
     let activeDroneIDs = new Set();
 
+    let threshold = -75;
+    let consecutive_readings = 3;
+
     const bandCounts = {'2.4GHz': 0, '5.8GHz': 0}
     const classCounts = {'Lightbridge': 0, 'OcuSync': 0};
 
@@ -38,6 +41,7 @@ export function createDetectionState() {
                     band :detection.band,
                     classification: detection.classification,
                     rssi: detection.rssi,
+                    rssi_history: [detection.rssi],
                 }; 
 
                 allDrones.set(droneID, newDrone);
@@ -48,6 +52,8 @@ export function createDetectionState() {
             } else {
                 // if existing, only update rssi 
                 allDrones.get(droneID).rssi = detection.rssi;
+                allDrones.get(droneID).rssi_history.push(detection.rssi);
+                allDrones.get(droneID).rssi_history = allDrones.get(droneID).rssi_history.slice(-3);
             }
 
             // add rssi to list for histogram
@@ -77,7 +83,12 @@ export function createDetectionState() {
         
         const allDroneList = [...allDrones]
 
-        return {activeDrones, activeCount, messageCount, bandCounts, classCounts, histogram, allDroneList};
+        return {activeDrones, activeCount, messageCount, bandCounts, classCounts, histogram, allDroneList, threshold, consecutive_readings};
+    }
+
+    function handleParameters(params) {
+        threshold = params.threshold;
+        consecutive_readings = params.consecutive_readings;
     }
 
     function cleaner() {

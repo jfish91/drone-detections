@@ -67,6 +67,11 @@ function renderTable() {
   // one row for each active drone
   const rows = latest.activeDrones.map(d => {
     const tr = document.createElement('tr');
+    let highlight = false;
+    if (Array.isArray(d.rssi_history) && d.rssi_history.length > latest.consecutive_readings - 1) {
+      const targets = d.rssi_history.filter(rssi => rssi > latest.threshold );
+      if (targets.length > latest.consecutive_readings - 1) highlight = true;
+    }
     const cells = [
       d.drone_id,
       new Date(d.start_time * 1000).toLocaleTimeString(),
@@ -80,6 +85,7 @@ function renderTable() {
       td.textContent = text;
       tr.append(td);
     }
+    if (highlight) tr.classList.add('highlight')
     return tr;
   });
   el.tableBody.replaceChildren(...rows);

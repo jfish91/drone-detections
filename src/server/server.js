@@ -30,7 +30,11 @@ app.post("/api/detections", (req, res) => {
         message: 'data recieved',
         recieved: data
     });
+})
 
+app.post("/api/highlight_parameters", (req, res) => {
+    const data = req.body;
+    detections.handleParameters(data);
     
 })
 
