@@ -13,6 +13,9 @@ const NEW_DRONE_MAX = 2;
 const NEW_DRONE_MIN = 0;
 const TOTAL_DRONE_MIN = 2;
 
+const CLASS_OPTIONS = ['OcuSync', 'Lightbridge'];
+const BAND_OPTIONS = ['2.4GHz', '5.8GHz'];
+
 export function roundToFourDecimals(num) {
     return parseFloat(num.toFixed(4));
 }
@@ -54,13 +57,17 @@ export function nextRssi(prevRssi) {
     return roundToFourDecimals(nextValue);
 }
 
+export function chooseRandomOption(optionList) {
+    return optionList[Math.floor(Math.random() * optionList.length)]
+}
+
 // create new drone
 export function createDrone(timestamp, droneIDs) {
     const drone = {
         drone_id: generateUniqueID(droneIDs),
         start_time: timestamp,
-        band : Math.random() < 0.5 ? '2.4GHz' : '5.8GHz',
-        classification: Math.random() < 0.5 ? 'OcuSync' : 'Lightbridge',
+        band : chooseRandomOption(BAND_OPTIONS),
+        classification: chooseRandomOption(CLASS_OPTIONS),
         rssi: generateRssi(),
     };
     return drone;

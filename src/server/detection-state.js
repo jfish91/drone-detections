@@ -13,8 +13,8 @@ export function createDetectionState() {
     let threshold = -75;
     let consecutive_readings = 3;
 
-    const bandCounts = {'2.4GHz': 0, '5.8GHz': 0}
-    const classCounts = {'Lightbridge': 0, 'OcuSync': 0};
+    const bandCounts = {}
+    const classCounts = {};
 
     // in future, make this an object?
     const rssiHistory = [];
@@ -47,8 +47,8 @@ export function createDetectionState() {
                 allDrones.set(droneID, newDrone);
 
                 // update counts
-                bandCounts[detection.band] += 1;
-                classCounts[detection.classification] += 1;
+                bandCounts[detection.band] = (bandCounts[detection.band] ?? 0) + 1;
+                classCounts[detection.classification] = (classCounts[detection.classification] ?? 0) + 1;
             } else {
                 // if existing, only update rssi 
                 allDrones.get(droneID).rssi = detection.rssi;
